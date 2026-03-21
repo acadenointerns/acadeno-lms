@@ -1,0 +1,5 @@
+LOGIN ERROR: permission denied for table users
+STACK: error: permission denied for table users
+    at C:\Users\ANULAL\Desktop\Maitexa\acadeno_lms\lms_backend\node_modules\pg\lib\client.js:631:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async login (C:\Users\ANULAL\Desktop\Maitexa\acadeno_lms\lms_backend\src\controllers\authController.js:148:24)

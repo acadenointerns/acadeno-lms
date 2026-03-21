@@ -1,0 +1,11 @@
+[dotenv@17.3.1] injecting env (14) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+Redis connected
+✅ PostgreSQL connected successfully
+✅ Redis connected successfully
+🚀 Server running on port 3001
+🌐 Auth routes fully mounted at http://localhost:3001/api/auth
+[0mPOST /api/auth/login [31m500[0m 20.450 ms - 33[0m
