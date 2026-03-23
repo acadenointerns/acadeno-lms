@@ -1,8 +1,13 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 const DashboardPage = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isBdaArea = user?.role === 'bda' || user?.role === 'super_admin';
 
   return (
     <div className="dashboard-layout">
@@ -23,9 +28,32 @@ const DashboardPage = () => {
       <div className="dashboard-body">
         {/* Sidebar */}
         <aside className="dashboard-sidebar">
-          <div className="sidebar-item active">
+          <div 
+            className={`sidebar-item ${location.pathname === '/dashboard' ? 'active' : ''}`}
+            onClick={() => navigate('/dashboard')}
+          >
             Dashboard
           </div>
+
+          {isBdaArea && (
+            <>
+              <div style={{ margin: '16px 0 8px 16px', fontSize: '11px', fontWeight: 600, color: 'var(--gray-border)', textTransform: 'uppercase' }}>Lead Management</div>
+              <div 
+                className={`sidebar-item ${location.pathname === '/leads' ? 'active' : ''}`}
+                onClick={() => navigate('/leads')}
+              >
+                All Leads
+              </div>
+              <div 
+                className={`sidebar-item ${location.pathname === '/leads/import' ? 'active' : ''}`}
+                onClick={() => navigate('/leads/import')}
+              >
+                Bulk Import
+              </div>
+            </>
+          )}
+
+          <div style={{ margin: '16px 0 8px 16px', fontSize: '11px', fontWeight: 600, color: 'var(--gray-border)', textTransform: 'uppercase' }}>Learning</div>
           <div className="sidebar-item">Courses</div>
           <div className="sidebar-item">Assignments</div>
           
@@ -40,21 +68,7 @@ const DashboardPage = () => {
 
         {/* Main Content Area */}
         <main className="dashboard-content">
-          <div className="welcome-widget">
-            <h1>Welcome back! 👋</h1>
-            <p>
-              Your current session is active. You have been granted the <strong>{user?.role}</strong> role.
-              The sidebar on the left will expand as more microservices map to your specific access level inside the platform ecosystem.
-            </p>
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
-             {/* Example Card */}
-             <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-               <h3 style={{ marginBottom: '8px', color: 'var(--navy-bg)' }}>Active Module</h3>
-               <p style={{ color: 'var(--gray-text)', fontSize: '14px' }}>The EPIC-01 Authentication phase is securely managing this environment state.</p>
-             </div>
-          </div>
+          <Outlet />
         </main>
       </div>
     </div>

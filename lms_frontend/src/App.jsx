@@ -8,6 +8,11 @@ import MfaPage from './pages/MfaPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
+import BdaDashboardPage from './pages/bda/BdaDashboardPage';
+import LeadsListPage from './pages/bda/LeadsListPage';
+import NewLeadPage from './pages/bda/NewLeadPage';
+import LeadDetailPage from './pages/bda/LeadDetailPage';
+import ImportLeadsPage from './pages/bda/ImportLeadsPage';
 
 const App = () => {
   return (
@@ -25,7 +30,13 @@ const App = () => {
 
           {/* Protected Routes Wrapper */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route element={<DashboardPage />}>
+               <Route path="/dashboard" element={<BdaDashboardPage />} />
+               <Route path="/leads" element={<LeadsListPage />} />
+               <Route path="/leads/new" element={<NewLeadPage />} />
+               <Route path="/leads/import" element={<ImportLeadsPage />} />
+               <Route path="/leads/:id" element={<LeadDetailPage />} />
+            </Route>
           </Route>
           
           {/* Catch All */}
