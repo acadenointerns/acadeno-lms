@@ -33,7 +33,7 @@ async function query(text, params, role = 'student') {
   try {
     // Set the session variable for RLS policies
     // (Ensure you reset this or use transactions + SET LOCAL if your pooling strategy reuses connections intensely)
-    await client.query(`SET app.current_user_role = '${role}'`);
+    await client.query("SELECT set_config('app.current_user_role', $1::text, false)", [role]);
 
     const result = await client.query(text, params);
     

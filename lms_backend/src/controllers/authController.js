@@ -125,8 +125,7 @@ async function issueTokensAndRespond(req, res, client, user) {
 async function login(req, res) {
   const client = await pool.connect();
   // Elevate to super_admin context strictly for secure backend authentication queries to bypass RLS
-  await client.query("SET app.current_user_role = 'super_admin'");
-
+  await client.query("SELECT set_config('app.current_user_role', 'super_admin', false)");
 
   try {
     const { email, password } = req.body;
@@ -245,7 +244,8 @@ async function login(req, res) {
         );
 
         // Generate 6-digit OTP and store in Redis
-        const mfaOtp = crypto.randomInt(100000, 999999).toString();
+        // Generate 6-digit OTP using crypto.randomBytes for maximum compatibility
+        const mfaOtp = (crypto.randomBytes(3).readUIntBE(0, 3) % 900000 + 100000).toString();
         const mfaKey = `otp:mfa:${user.id}`;
         await redis.set(mfaKey, mfaOtp, 'EX', MFA_OTP_TTL_SECONDS);
 
@@ -267,8 +267,7 @@ async function login(req, res) {
     return await issueTokensAndRespond(req, res, client, user);
   } catch (err) {
     // ---- 9. Unexpected errors — never leak internals ----
-    console.error('LOGIN ERROR:', err.message);
-    console.error('STACK:', err.stack);
+    console.error('Login error:', err.message);
     return res.status(500).json({ error: 'Internal server error' });
   } finally {
     client.release();
@@ -289,7 +288,7 @@ async function login(req, res) {
 async function refresh(req, res) {
   const client = await pool.connect();
   // Elevate to super_admin context strictly for secure backend authentication queries to bypass RLS
-  await client.query("SET app.current_user_role = 'super_admin'");
+  await client.query("SELECT set_config('app.current_user_role', 'super_admin', false)");
 
 
   try {
@@ -437,7 +436,7 @@ async function refresh(req, res) {
 async function logout(req, res) {
   const client = await pool.connect();
   // Elevate to super_admin context strictly for secure backend authentication queries to bypass RLS
-  await client.query("SET app.current_user_role = 'super_admin'");
+  await client.query("SELECT set_config('app.current_user_role', 'super_admin', false)");
 
 
   try {
@@ -481,7 +480,7 @@ async function logout(req, res) {
 async function forgotPassword(req, res) {
   const client = await pool.connect();
   // Elevate to super_admin context strictly for secure backend authentication queries to bypass RLS
-  await client.query("SET app.current_user_role = 'super_admin'");
+  await client.query("SELECT set_config('app.current_user_role', 'super_admin', false)");
 
 
   try {
@@ -524,7 +523,7 @@ async function forgotPassword(req, res) {
     const user = userResult.rows[0];
 
     // ---- Generate cryptographically secure 6-digit OTP ----
-    const otp = crypto.randomInt(100000, 999999).toString();
+    const otp = (crypto.randomBytes(3).readUIntBE(0, 3) % 900000 + 100000).toString();
 
     // Store in Redis: key = "otp:reset:{user_id}", TTL = 600s
     const otpKey = `otp:reset:${user.id}`;
@@ -560,7 +559,7 @@ async function forgotPassword(req, res) {
 async function resetPassword(req, res) {
   const client = await pool.connect();
   // Elevate to super_admin context strictly for secure backend authentication queries to bypass RLS
-  await client.query("SET app.current_user_role = 'super_admin'");
+  await client.query("SELECT set_config('app.current_user_role', 'super_admin', false)");
 
 
   try {
@@ -660,7 +659,7 @@ async function resetPassword(req, res) {
 async function verifyMfa(req, res) {
   const client = await pool.connect();
   // Elevate to super_admin context strictly for secure backend authentication queries to bypass RLS
-  await client.query("SET app.current_user_role = 'super_admin'");
+  await client.query("SELECT set_config('app.current_user_role', 'super_admin', false)");
 
 
   try {

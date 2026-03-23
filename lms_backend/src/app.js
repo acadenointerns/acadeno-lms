@@ -29,6 +29,10 @@ app.use(morgan('dev'));
 // Mount auth routes at /api/auth
 app.use('/api/auth', authRoutes);
 
+// Mount lead logic routes at /api/leads natively 
+const leadsRoutes = require('./routes/leads');
+app.use('/api/leads', leadsRoutes);
+
 // ---- Health Check ----
 app.get('/health', async (req, res) => {
   try {

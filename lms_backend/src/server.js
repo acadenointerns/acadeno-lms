@@ -22,6 +22,9 @@ async function startServer() {
     await redis.ping();
     console.log('✅ Redis connected successfully');
 
+    // 4. Register Lead Management Jobs (US-BDA-07)
+    require('./jobs/leadArchiveJob').startLeadJobs();
+
     // 3. Start server
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);

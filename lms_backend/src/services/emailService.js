@@ -37,4 +37,22 @@ async function sendLockoutEmail(toEmail, lockedUntil) {
   });
 }
 
-module.exports = { sendOTPEmail, sendLockoutEmail };
+async function sendLeadArchiveEmail(toEmail, leadName, lastActivityDate) {
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to: toEmail,
+    subject: `Lead Auto-Archived: ${leadName}`,
+    text: `The lead "${leadName}" has been automatically archived to "cold" status due to 90 days of inactivity.\n\nLast Activity Date: ${lastActivityDate}\nReason: 90 days of inactivity rule (BR-L03).`,
+  });
+}
+
+async function sendFollowUpReminderEmail(toEmail, leadName, lastNote, followUpDate, leadLink) {
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to: toEmail,
+    subject: `Follow-up Reminder: ${leadName}`,
+    text: `Daily Reminder: You have a scheduled follow-up for the lead "${leadName}".\n\nFollow-up Date: ${followUpDate}\nLast Note from BDA: ${lastNote || 'No notes available.'}\n\nDirect Link to Lead: ${leadLink}`,
+  });
+}
+
+module.exports = { sendOTPEmail, sendLockoutEmail, sendLeadArchiveEmail, sendFollowUpReminderEmail };
